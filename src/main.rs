@@ -62,7 +62,7 @@ fn main() {
     let rootless = opts.rootless.unwrap_or(false);
     let aardvark_bin = opts
         .aardvark_binary
-        .unwrap_or_else(|| OsString::from("/usr/libexec/podman/aardvark-dns"));
+        .unwrap_or_else(|| OsString::from("/usr/lib/podman/aardvark-dns"));
     let result = match opts.subcmd {
         SubCommand::Setup(setup) => setup.exec(
             opts.file,
