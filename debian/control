@@ -1,0 +1,11 @@
+Source: netavark
+Maintainer: Monika Kairaitytė <monika@kibit.lt>
+Section: misc
+Priority: optional
+Standards-Version: 1.14
+Build-Depends: debhelper-compat (= 13)
+
+Package: netavark
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: use info from netavark control file

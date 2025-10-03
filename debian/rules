@@ -1,0 +1,12 @@
+#!/usr/bin/make -f
+
+# ensure /usr is always used when “make && make install” are called
+export prefix=/usr
+
+%:
+	dh $@
+
+
+override_dh_auto_test:
+
+override_dh_usrlocal:
