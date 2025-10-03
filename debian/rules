@@ -1,21 +1,24 @@
 #!/usr/bin/make -f
 
+# ensure /usr is always used when “make && make install” are called
+export prefix=/usr
+
 # cf. https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1091318
 export NETAVARK_DEFAULT_FW := nftables
 
-# generate cargo-checksum file
-_mkchecksum = printf '{"package":"%s","files":{}}\n' \
- $$(sha256sum $(or $2,$(dir $1)Cargo.toml) | grep -Po '^\S+') > $1;
+export PATH := $(HOME)/.cargo/bin:$(PATH)
+export CARGO_HOME := $(HOME)/.cargo
+export RUSTUP_HOME := $(HOME)/.rustup
 
 %:
-	dh $@ --buildsystem cargo
+	dh $@ --with cargo
 
-execute_before_dh_auto_configure:
-	$(call _mkchecksum,debian/cargo-checksum.json,Cargo.toml)
+override_dh_auto_test:
+
+override_dh_usrlocal:
 
 execute_after_dh_install:
 	mkdir -vp debian/netavark/usr/lib debian/netavark/usr/lib/systemd/system
-	mv -v debian/netavark/usr/bin debian/netavark/usr/lib/podman
 	install -D -m 664  contrib/systemd/system/netavark-dhcp-proxy.socket \
 		debian/netavark/usr/lib/systemd/system
 	sed -e 's;@@NETAVARK@@;/usr/lib/podman/netavark;g' \
