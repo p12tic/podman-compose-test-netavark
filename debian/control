@@ -1,11 +1,22 @@
 Source: netavark
-Maintainer: Monika Kairaitytė <monika@kibit.lt>
-Section: misc
+Section: net
 Priority: optional
-Standards-Version: 1.14
-Build-Depends: debhelper-compat (= 13)
+Maintainer: Monika Kairaitytė <monika@kibit.lt>
+Build-Depends: debhelper-compat (= 13),
+               dh-cargo (>= 25)
+Standards-Version: 4.7.2
+Homepage: https://github.com/containers/netavark
+Vcs-Browser: https://salsa.debian.org/debian/netavark
+Vcs-Git: https://salsa.debian.org/debian/netavark.git
+Rules-Requires-Root: no
 
 Package: netavark
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: use info from netavark control file
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Provides: container-network-stack (= 2)
+Recommends: aardvark-dns, nftables
+Breaks: aardvark-dns (<< 1.12)
+Enhances: podman
+Description: Rust based network stack for containers
+ Netavark is designed to work with but is also applicable
+ for other OCI container management applications.
