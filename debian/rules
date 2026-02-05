@@ -1,0 +1,30 @@
+#!/usr/bin/make -f
+
+# ensure /usr is always used when “make && make install” are called
+export prefix=/usr
+
+# cf. https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1091318
+export NETAVARK_DEFAULT_FW := nftables
+
+export PATH := $(HOME)/.cargo/bin:$(PATH)
+export CARGO_HOME := $(HOME)/.cargo
+export RUSTUP_HOME := $(HOME)/.rustup
+
+%:
+	dh $@ --with cargo
+
+override_dh_auto_test:
+
+override_dh_usrlocal:
+
+execute_after_dh_install:
+	mkdir -vp debian/netavark/usr/lib debian/netavark/usr/lib/systemd/system
+	install -D -m 664  contrib/systemd/system/netavark-dhcp-proxy.socket \
+		debian/netavark/usr/lib/systemd/system
+	sed -e 's;@@NETAVARK@@;/usr/lib/podman/netavark;g' \
+		< contrib/systemd/system/netavark-dhcp-proxy.service.in \
+		> debian/netavark/usr/lib/systemd/system/netavark-dhcp-proxy.service
+	sed -e 's;@@NETAVARK@@;/usr/lib/podman/netavark;g' \
+		< contrib/systemd/system/netavark-firewalld-reload.service.in \
+		> debian/netavark/usr/lib/systemd/system/netavark-firewalld-reload.service
+
